@@ -1,6 +1,5 @@
 # INTRODUCTION :
-## ONOS :
-What is ONOS?
+## What is ONOS?
 
 ONOS stands for Open Network Operating System. ONOS provides the control plane for a software-defined network (SDN), managing network components, such as switches and links, and running software programs or modules to provide communication services to end hosts and neighboring networks.
 
