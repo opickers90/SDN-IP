@@ -405,12 +405,12 @@ for 1000 routes prefix
 ~/bgpsimple$ sudo ./bgp_simple.pl -myas 65001 -myip 172.16.1.2 -peerip 172.16.1.1 -peeras 65000 -p /home/user/myroutes -m 1000 -v -keepalive 5 -holdtime 20
 ```
 
-for 10 routes prefix
+for 10000 routes prefix
 ```
 ~/bgpsimple$ sudo ./bgp_simple.pl -myas 65001 -myip 172.16.1.2 -peerip 172.16.1.1 -peeras 65000 -p /home/user/myroutes -m 10000 -v -keepalive 5 -holdtime 20
 ```
 
-for 10 routes prefix
+for 20000 routes prefix
 ```
 ~/bgpsimple$ sudo ./bgp_simple.pl -myas 65001 -myip 172.16.1.2 -peerip 172.16.1.1 -peeras 65000 -p /home/user/myroutes -m 20000 -v -keepalive 5 -holdtime 20
 ```
