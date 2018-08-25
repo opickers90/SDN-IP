@@ -246,7 +246,7 @@ vim /tmp/cfg.json
 ```
 curl --user onos:rocks -X POST -H "Content-Type: application/json" http://10.10.11.11:8181/onos/v1/network/configuration/ -d @/tmp/cfg.json
 ```
-### Linux Quagga Router
+#### Linux Quagga Router
 1. Install Ubuntu Server 16.04 LTS in PC Server
 2. Set IP address for in interace :
  ```
@@ -322,7 +322,7 @@ Configure IP Forwarding :
 #echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
  ```
   
-### Cisco Router 2811
+#### Cisco Router 2811
 1. Config Interface Fast ethernet 0/1
 ```
 (config)#interface fast ethernet 0/1
@@ -340,7 +340,7 @@ Configure IP Forwarding :
 (config-router)#neighbor 172.16.2.1 advertisement-interval 5
 ```
 
-### PICA 8 Switch
+#### PICA 8 Switch
 1. Set PICA 8 controller to ONOS Controller
 ```
 ovs-vsctl set-controller br0 tcp:10.10.11.11:6633
