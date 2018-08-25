@@ -347,3 +347,89 @@ ovs-vsctl set-controller br0 tcp:10.10.11.11:6633
 ```
 
 ## Test and Verification
+### Prerequisite:
+1. In Linux Quagga Router, Install BGPdump command :
+from apt
+```
+$sudo apt-get install bgpdump
+```
+or from binary code
+```
+$ wget http://www.ris.ripe.net/source/bgpdump/libbgpdump-1.5.0.tgz
+$ tar -xvzf libbgpdump-1.5.0.tgz 
+```
+build (Prerequisites: zlib-devel, bzip2-devel)
+```
+$ cd libbgpdump-1.5.0
+~/libbgpdump-1.5.0$ sh ./bootstrap.sh
+~/libbgpdump-1.5.0$ make
+~/libbgpdump-1.5.0$./bgpdump -T
+```
+2. Get Route information from http://data.ris.ripe.net/rrc00/ (i am using latest-bview.gz).
+```
+$ wget http://data.ris.ripe.net/rrc00/latest-bview.gz
+```
+Compile latest bview with bgp dump command 
+```
+zcat latest-bview.gz | bgpdump -m - > myroutes
+```
+filter duplicate row in myroutes files
+```
+awk -F'|' '!seen[$6]++' myroutes >> myroutes
+```
+3. Get simple BGP peering and route injection script from (https://github.com/xdel/bgpsimple)
+```
+$ git clone https://github.com/xdel/bgpsimple.git
+```
+### Test BGP Route injection 
+1. in Linux Quagga Router:
+inject router prefix from files “myroute”  with bgp_simple script:
+```
+$ cd bgpsimple/
+~/bgpsimple$ sudo ./bgp_simple.pl <option>
+	: -myas <own AS number> 
+	: -myip <own IP Address>  
+	: -peerip <neighbor IP Address>  
+	: -peeras <neighbor AS Number>  
+	: -p <push route information dump location>
+	: -m <number of routes> 
+	: -v <verbose>
+	: -keepalive 5 -holdtime 20 <timers>
+```
+for 100 routes prefix
+```
+~/bgpsimple$ sudo ./bgp_simple.pl -myas 65001 -myip 172.16.1.2 -peerip 172.16.1.1 -peeras 65000 -p /home/user/myroutes -m 100 -v -keepalive 5 -holdtime 20
+```
+
+for 1000 routes prefix
+```
+~/bgpsimple$ sudo ./bgp_simple.pl -myas 65001 -myip 172.16.1.2 -peerip 172.16.1.1 -peeras 65000 -p /home/user/myroutes -m 1000 -v -keepalive 5 -holdtime 20
+```
+
+for 10 routes prefix
+```
+~/bgpsimple$ sudo ./bgp_simple.pl -myas 65001 -myip 172.16.1.2 -peerip 172.16.1.1 -peeras 65000 -p /home/user/myroutes -m 10000 -v -keepalive 5 -holdtime 20
+```
+
+for 10 routes prefix
+```
+~/bgpsimple$ sudo ./bgp_simple.pl -myas 65001 -myip 172.16.1.2 -peerip 172.16.1.1 -peeras 65000 -p /home/user/myroutes -m 20000 -v -keepalive 5 -holdtime 20
+```
+
+### Verification
+1. Check BGP prefix in Speaker Router (Ubuntu Server) with command :
+```
+$ telnet 127.0.0.1 2605
+# show ip bgp summary
+```
+
+2. Check BGP prefix in Cisco Router 2911 with command :
+```
+# show ip bgp summary”
+```
+
+3. Check BGP Prefix in ONOS Controller with command :
+```
+onos> bgp-routes
+```
+## Result
