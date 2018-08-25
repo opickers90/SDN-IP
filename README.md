@@ -424,7 +424,8 @@ $ telnet 127.0.0.1 2605
 
 2. Check BGP prefix in Cisco Router 2911 with command :
 ```
-# show ip bgp summary”
+$ telnet 127.0.0.1 2605
+# show ip bgp summary
 ```
 
 3. Check BGP Prefix in ONOS Controller with command :
