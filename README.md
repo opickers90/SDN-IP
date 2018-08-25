@@ -22,8 +22,7 @@ We can download ONOS Contoller from this (https://wiki.onosproject.org/display/O
 ## SDN-IP :
 SDN-IP is an ONOS application that allows a Software Defined Network to connect to external networks on the Internet using the standard Border Gateway Protocol (BGP). Externally, from a BGP perspective, the SDN network appears as a single Autonomous System (AS) that behaves as any traditional AS. Within the AS, the SDN-IP application provides the integration mechanism between BGP and ONOS. At the protocol level, SDN-IP behaves as a regular BGP speaker. From ONOS perspective, it’s just an application that uses its services to install and update the appropriate forwarding state in the SDN data plane.
 
-![SDN-IP Overview](https://wiki.onosproject.org/download/attachments/2130846/overview.png?version=1&modificationDate=1417566171959&api=v2)
-
+![SDN-IP Overview](https://github.com/opickers90/SDN-IP/blob/master/image/overview%20topology.png)
 In a typical deployment scenario, an SDN-IP controlled network acts as a transit Autonomous System (AS) interconnecting different IP networks. Each external network is a different AS domain, which interfaces with our SDN network through its BGP-speaking border routers.
 
 The SDN-IP network is composed of OpenFlow switches controlled by ONOS. While SDN-IP can be used even with a single ONOS instance, for high availability and scalability, there should be a cluster of ONOS instances, where some of those instances run the SDN-IP application.
@@ -49,7 +48,7 @@ source (https://wiki.onosproject.org/display/ONOS/SDN-IP+Architecture)
 
 ## TUTORIAL :
 ### TestBed Environment Topology :
-![Topology](https://github.com/opickers90/SDN-IP/blob/master/SDNIP%20Topology.png?raw=true)
+![Topology](https://github.com/opickers90/SDN-IP/blob/master/image/SDNIP%20Topology.png)
 
 |No   |Device   |Port Number   |IP Address   |AS NUMBER   |
 |---|---|---|---|---|
@@ -433,3 +432,14 @@ $ telnet 127.0.0.1 2605
 onos> bgp-routes
 ```
 ## Result
+1. for 100 routes prefix
+![inject100](https://github.com/opickers90/SDN-IP/blob/master/image/inject100.png)
+
+2. for 1000 routes prefix
+![inject1000](https://github.com/opickers90/SDN-IP/blob/master/image/inject1000.png)
+
+3. for 10000 routes prefix
+![inject10000](https://github.com/opickers90/SDN-IP/blob/master/image/inject10000.png)
+
+4. for 20000 routes prefix
+![inject20000](https://github.com/opickers90/SDN-IP/blob/master/image/inject20000.png)
