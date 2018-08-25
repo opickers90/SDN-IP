@@ -66,8 +66,7 @@ source (https://wiki.onosproject.org/display/ONOS/SDN-IP+Architecture)
 |   |   |1/1/3   |   |   |
 
 ### Device Installation & Configuration:
-#### Ubuntu Server :
-##### Speaker Router and ONOS Controller  : 
+#### Speaker Router and ONOS Controller  : 
 1. Install Ubuntu Server 16.04 LTS in PC Server
 2. Configure subinterface :
   ```sa
@@ -109,7 +108,7 @@ source (https://wiki.onosproject.org/display/ONOS/SDN-IP+Architecture)
   quagga 	4632 	1 	0 	22:25 	? 	00:00:00 	/usr/lib/quagga/bgpd --daemon
   quagga 	4636 	1 	0 	22:25 	? 	00:00:00 	/usr/lib/quagga/zebra --daemon
   ```
-  5. Configure Quagga BGP Files and change filename to Speaker:
+  5. Configure Quagga BGP Configuration Files and change filename to Speaker:
   ```
   #cp /usr/share/doc/quagga/examples/zebra.conf.sample /etc/quagga/zebra.conf
   #cp /usr/share/doc/quagga/examples/bgpd.conf.sample /etc/quagga/speakerd.conf 
@@ -202,9 +201,9 @@ onos> app activate org.onosproject.proxyarp
 onos> app activate org.onosproject.sdnip
 ```
 
-8.  Create ONOS Configuration files and configure BGP interface (netcfg.json) in /tmp/ and push to ONOS:
+8.  Create ONOS Configuration files and configure BGP interface (cfg.json) in /tmp/ and push to ONOS:
 ```
-vim /tmp/netcfg.json
+vim /tmp/cfg.json
 ```
 ```
 {
@@ -247,3 +246,104 @@ vim /tmp/netcfg.json
 ```
 curl --user onos:rocks -X POST -H "Content-Type: application/json" http://10.10.11.11:8181/onos/v1/network/configuration/ -d @/tmp/cfg.json
 ```
+### Linux Quagga Router
+1. Install Ubuntu Server 16.04 LTS in PC Server
+2. Set IP address for in interace :
+ ```
+  ifconfig eth0 172.16.1.2 netmask 255.255.255.0 up
+  ```
+3. Install and Configure Quagga Router :
+  ```
+  apt-get install quagga
+  ```
+  Enable IPv4 BGP Daemon :
+  ```
+  vim /etc/quagga/daemons
+  ```
+  ```
+  zebra=yes
+  bgpd=yes
+  ospfd=no
+  ospf6d=no
+  ripd=no
+  ripngd=no
+  ```
+  Restart Quagga Service :
+  ```
+  #/etc/init.d/quagga restart
+  ```
+  Check if Quagga service already up :
+  ```
+  #ps -ef | grep quagga
+  ```
+  ```
+  UID 	PID 	PPID 	C 	STIME 	TTY 	TIME 	CMD
+  quagga 	4632 	1 	0 	22:25 	? 	00:00:00 	/usr/lib/quagga/bgpd --daemon
+  quagga 	4636 	1 	0 	22:25 	? 	00:00:00 	/usr/lib/quagga/zebra --daemon
+  ```
+4. Configure Quagga BGP Configuration Files:
+  ```
+  #cp /usr/share/doc/quagga/examples/zebra.conf.sample /etc/quagga/zebra.conf
+  #cp /usr/share/doc/quagga/examples/bgpd.conf.sample /etc/quagga/bgpd.conf 
+  #chown quagga.quaggavty /etc/quagga/*.conf
+  #chmod 640 /etc/quagga/*.conf 
+  ```
+ Configure BGP Routing : 
+  ```
+  vim /etc/quagga/bgpd.conf
+  ```
+  ```
+ BGP configuration for bgp1
+ !
+ hostname bgp1
+ password sdnip
+ !
+ router bgp 65001
+  bgp router-id 10.10.11.13
+  timers bgp 3 9
+  neighbor 172.16.1.1 remote-as 65000
+  neighbor 172.16.1.1 ebgp-multihop
+  neighbor 172.16.1.1 timers connect 5
+  neighbor 172.16.1.1 advertisement-interval 5
+  network 192.168.1.0/24
+ !
+ log file /var/log/quagga/quagga.log
+ log stdout
+ log timestamp precision 6
+ end
+  ```
+Restart Quagga Service :
+ ```
+ #/etc/init.d/quagga restart
+ ```
+Configure IP Forwarding :
+```
+#echo "1" > /proc/sys/net/ipv4/ip_forward
+#echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+ ```
+  
+### Cisco Router 2811
+1. Config Interface Fast ethernet 0/1
+```
+(config)#interface fast ethernet 0/1
+(config-if)#ip address 172.16.2.2 255.255.255.0
+(config-if)#no shutdown
+```
+2. Config Routing BGP 
+```  
+(config)#router bgp 65000
+(config-router)#bgp router-id 10.10.11.13
+(config-router)#timers bgp 3 9
+(config-router)#neighbor 172.16.2.1 remote-as 65000
+(config-router)#neighbor 172.16.2.1 ebgp-multihop
+(config-router)#neighbor 172.16.2.1 timers 5
+(config-router)#neighbor 172.16.2.1 advertisement-interval 5
+```
+
+### PICA 8 Switch
+1. Set PICA 8 controller to ONOS Controller
+```
+ovs-vsctl set-controller br0 tcp:10.10.11.11:6633
+```
+
+## Test and Verification
