@@ -330,12 +330,12 @@ Configure IP Forwarding :
 ```
 2. Config Routing BGP 
 ```  
-(config)#router bgp 65000
+(config)#router bgp 65002
 (config-router)#bgp router-id 10.10.11.13
 (config-router)#timers bgp 3 9
 (config-router)#neighbor 172.16.2.1 remote-as 65000
 (config-router)#neighbor 172.16.2.1 ebgp-multihop
-(config-router)#neighbor 172.16.2.1 timers 5
+(config-router)#neighbor 172.16.2.1 timers 5 20
 (config-router)#neighbor 172.16.2.1 advertisement-interval 5
 ```
 
