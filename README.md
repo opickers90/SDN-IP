@@ -382,6 +382,12 @@ $ git clone https://github.com/xdel/bgpsimple.git
 ```
 ### Test BGP Route injection 
 1. in Linux Quagga Router:
+
+Turn off Quagga.service
+```
+$ /etc/init.d/quagga stop
+```
+
 inject router prefix from files “myroute”  with bgp_simple script:
 ```
 $ cd bgpsimple/
